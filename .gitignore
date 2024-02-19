@@ -1,0 +1,10 @@
+.*/
+build/
+out/
+*.imp
+*.ipr
+*.iws
+*.idea
+/jcef-bundle
+logs
+/.gettext.json
