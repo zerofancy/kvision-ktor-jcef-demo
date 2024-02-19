@@ -1,17 +1,18 @@
 package com.example.project
 
+import com.example.project.util.stubAll
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.friwi.jcefmaven.CefAppBuilder
+import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import me.friwi.jcefmaven.impl.progress.ConsoleProgressHandler
+import org.cef.CefApp
 import org.cef.browser.CefBrowser
-import org.cef.browser.CefFrame
-import org.cef.callback.CefContextMenuParams
-import org.cef.callback.CefMenuModel
 import org.cef.handler.CefContextMenuHandler
+import org.cef.handler.CefDisplayHandlerAdapter
 import java.awt.Dimension
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
@@ -43,7 +44,7 @@ private fun launchBrowserFrame(engine: NettyApplicationEngine) {
     GlobalScope.launch {
         val port = engine.resolvedConnectors().first()
 
-        //Create a new CefAppBuilder instance
+        //Create a new CefAppBuilder instance fixme 从github下载镜像，导致初次启动很慢
         val builder = CefAppBuilder()
 
         //Configure the builder instance
@@ -51,26 +52,21 @@ private fun launchBrowserFrame(engine: NettyApplicationEngine) {
         builder.setProgressHandler(ConsoleProgressHandler()); //Default
         //builder.addJcefArgs("--disable-gpu"); //Just an example
         builder.cefSettings.windowless_rendering_enabled = true; //Default - select OSR mode
-        builder.cefSettings
 
         //Set an app handler. Do not use CefApp.addAppHandler(...), it will break your code on MacOSX!
-        //builder.setAppHandler(new MavenCefAppHandlerAdapter(){...});
+        builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
+            override fun stateHasChanged(state: CefApp.CefAppState?) {
+                super.stateHasChanged(state)
+                if (state == CefApp.CefAppState.TERMINATED) {
+                    exitProcess(1)
+                }
+            }
+        })
 
         //Build a CefApp instance using the configuration above
         val app = builder.build();
         val client = app.createClient()
-        client.addContextMenuHandler(object : CefContextMenuHandler {
-            override fun onBeforeContextMenu(browser: CefBrowser?, frame: CefFrame?, params: CefContextMenuParams?, model: CefMenuModel?) {
-                model?.clear()
-            }
-
-            override fun onContextMenuCommand(browser: CefBrowser?, frame: CefFrame?, params: CefContextMenuParams?, commandId: Int, eventFlags: Int): Boolean {
-                return false
-            }
-
-            override fun onContextMenuDismissed(browser: CefBrowser?, frame: CefFrame?) {
-            }
-        })
+        client.addContextMenuHandler(object : CefContextMenuHandler by stubAll() {})
 
         println("browser init http://localhost:${port.port}")
         val browser = client.createBrowser("http://localhost:${port.port}", true, false)
@@ -78,37 +74,23 @@ private fun launchBrowserFrame(engine: NettyApplicationEngine) {
         val jFrame = JFrame()
         jFrame.title = "Hello World"
         jFrame.add(component)
-        jFrame.addWindowListener(object : WindowListener {
-            override fun windowOpened(e: WindowEvent?) {
-            }
-
-            override fun windowClosing(e: WindowEvent?) {
-            }
-
+        jFrame.addWindowListener(object : WindowListener by stubAll() {
             override fun windowClosed(e: WindowEvent?) {
                 client.dispose()
                 app.dispose()
                 engine.stop()
             }
-
-            override fun windowIconified(e: WindowEvent?) {
-            }
-
-            override fun windowDeiconified(e: WindowEvent?) {
-            }
-
-            override fun windowActivated(e: WindowEvent?) {
-            }
-
-            override fun windowDeactivated(e: WindowEvent?) {
-            }
-
         })
         jFrame.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         jFrame.minimumSize = Dimension(1000, 618)
         jFrame.isVisible = true
-        //jFrame.extendedState = MAXIMIZED_BOTH
+        client.addDisplayHandler(object : CefDisplayHandlerAdapter() {
+            override fun onTitleChange(browser: CefBrowser?, title: String?) {
+                super.onTitleChange(browser, title)
+                jFrame.title = title
+            }
+        })
     }
 }
 
