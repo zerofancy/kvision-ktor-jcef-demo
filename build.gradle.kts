@@ -23,7 +23,7 @@ val kvisionVersion: String by System.getProperties()
 val ktorVersion: String by project
 val logbackVersion: String by project
 
-val mainClassName = "com.example.project.EngineMainKt"
+val mainClassName = "top.ntutn.kvjcef.engine.EngineMainKt.main"
 
 
 afterEvaluate {
@@ -70,11 +70,11 @@ kotlin {
                     static = mutableListOf("${layout.buildDirectory.asFile.get()}/processedResources/js/main")
                 )
             })
-            testTask(Action {
+            testTask {
                 useKarma {
                     useChromeHeadless()
                 }
-            })
+            }
         }
         binaries.executable()
     }
@@ -98,6 +98,8 @@ kotlin {
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("me.friwi:jcefmaven:116.0.19.1")
+                // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-swing
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
             }
             resources.srcDir(File(project.buildDir, "dist/js"))
             logger.warn(File(project.buildDir, "dist").toString())

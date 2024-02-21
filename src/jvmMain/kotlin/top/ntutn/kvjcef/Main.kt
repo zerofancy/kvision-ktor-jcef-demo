@@ -1,5 +1,6 @@
-package com.example.project
+package top.ntutn.kvjcef
 
+import com.example.project.PingService
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
@@ -19,12 +20,6 @@ fun Application.main() {
     val module = module {
         factoryOf(::PingService)
     }
-    val SimplePlugin = createApplicationPlugin(name = "SimplePlugin") {
-        this@createApplicationPlugin.applicationConfig
-
-        println("SimplePlugin is installed!")
-    }
-    install(SimplePlugin)
     kvisionInit(false, module)
 
 }
