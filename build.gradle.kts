@@ -16,6 +16,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://jitpack.io")
+    maven("https://gitlab.com/api/v4/projects/38224197/packages/maven")
 }
 
 // Versions
@@ -101,7 +102,8 @@ kotlin {
                 implementation("me.friwi:jcefmaven:116.0.19.1")
                 // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-swing
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
-                implementation("com.github.webview.webview_java:core:0168b87a7c")
+                //implementation("com.github.webview.webview_java:core:0168b87a7c")
+                implementation("com.github.winterreisender:webviewko-jvm:0.6.0")
             }
             resources.srcDir(File(project.buildDir, "dist/js"))
             logger.warn(File(project.buildDir, "dist").toString())

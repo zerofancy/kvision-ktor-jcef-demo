@@ -1,6 +1,6 @@
 package top.ntutn.kvjcef.engine
 
-import dev.webview.webview_java.Webview
+import com.github.winterreisender.webviewko.WebviewKo
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -33,31 +33,12 @@ fun main(vararg args: String) {
 private fun launchBrowserFrame(engine: NettyApplicationEngine) {
     scope.launch(Dispatchers.IO) {
         val port = engine.resolvedConnectors().first().port
-        val wv = Webview(true) // Can optionally be created with an AWT component to be painted on.
-
-
-        // Calling `await echo(1,2,3)` will return `[1,2,3]`
-        //wv.bind("echo") { arguments -> arguments }
-
-        wv.setTitle("My Webview App")
-
-        wv.setSize(800, 600);
-
-        // load a URL
-        wv.loadURL("http://localhost:$port")
-
-        /*
-
-        Or, load raw html from a file with:
-        wv.setHTML("<h1>This is a test!<h1>");
-
-        String htmlContent = loadContentFromFile("index.html");
-        wv.setHTML(htmlContent);
-
-         */
-        wv.run() // Run the webview event loop, the webview is fully disposed when this returns.
-        wv.close() // Free any resources allocated.
-        //EngineFrame(engine)
+        WebviewKo().run {
+            size(1000, 618)
+            title("Title")
+            url("http://localhost:$port")
+            show()
+        }
     }
 }
 
