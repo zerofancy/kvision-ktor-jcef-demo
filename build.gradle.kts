@@ -15,6 +15,7 @@ group = "com.example"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://jitpack.io")
 }
 
 // Versions
@@ -100,6 +101,7 @@ kotlin {
                 implementation("me.friwi:jcefmaven:116.0.19.1")
                 // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-swing
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
+                implementation("com.github.webview.webview_java:core:0168b87a7c")
             }
             resources.srcDir(File(project.buildDir, "dist/js"))
             logger.warn(File(project.buildDir, "dist").toString())

@@ -1,8 +1,6 @@
 package top.ntutn.kvjcef.engine
 
-import com.jogamp.common.os.Platform
 import io.ktor.server.netty.*
-import jogamp.common.os.PlatformPropsImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -12,10 +10,6 @@ import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import me.friwi.jcefmaven.impl.progress.ConsoleProgressHandler
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
-import org.cef.browser.CefFrame
-import org.cef.callback.CefContextMenuParams
-import org.cef.callback.CefMenuModel
-import org.cef.handler.CefContextMenuHandler
 import org.cef.handler.CefDisplayHandlerAdapter
 import org.cef.handler.CefLoadHandler
 import java.awt.Dimension
