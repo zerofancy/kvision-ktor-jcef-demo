@@ -68,9 +68,7 @@ class EngineFrame(engine: NettyApplicationEngine): JFrame() {
         builder.setInstallDir(File("jcef-bundle")); //Default
         builder.setProgressHandler(ConsoleProgressHandler()); //Default
 
-        // macOS下缺少native library：https://github.com/jcefmaven/jcefmaven/issues/95
-        val isMasOS = PlatformPropsImpl.OS_TYPE == Platform.OSType.MACOS
-        builder.cefSettings.windowless_rendering_enabled = !isMasOS
+        builder.cefSettings.windowless_rendering_enabled = false
 
         //Set an app handler. Do not use CefApp.addAppHandler(...), it will break your code on MacOSX!
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
@@ -85,19 +83,6 @@ class EngineFrame(engine: NettyApplicationEngine): JFrame() {
         //Build a CefApp instance using the configuration above
         val app = builder.build();
         val client = app.createClient()
-        client.addContextMenuHandler(object : CefContextMenuHandler by DummyContextMenuHandler {
-            override fun onBeforeContextMenu(
-                browser: CefBrowser?,
-                frame: CefFrame?,
-                params: CefContextMenuParams?,
-                model: CefMenuModel?
-            ) {
-                if (PlatformPropsImpl.OS_TYPE == Platform.OSType.LINUX) {
-                    // 测试在我的Debian KDE上这个菜单有问题，先清掉吧
-                    model?.clear()
-                }
-            }
-        })
         client.addDisplayHandler(object : CefDisplayHandlerAdapter() {
             override fun onTitleChange(browser: CefBrowser?, title: String?) {
                 super.onTitleChange(browser, title)
@@ -123,6 +108,6 @@ class EngineFrame(engine: NettyApplicationEngine): JFrame() {
             }
         })
 
-        return client.createBrowser("about:blank", !isMasOS, false)
+        return client.createBrowser("about:blank", false, false)
     }
 }
