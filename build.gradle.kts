@@ -23,7 +23,7 @@ val kvisionVersion: String by System.getProperties()
 val ktorVersion: String by project
 val logbackVersion: String by project
 
-val mainClassName = "top.ntutn.kvjcef.engine.EngineMainKt.main"
+val mainClassName = "top.ntutn.kvjcef.engine.EngineMainKt"
 
 
 afterEvaluate {
