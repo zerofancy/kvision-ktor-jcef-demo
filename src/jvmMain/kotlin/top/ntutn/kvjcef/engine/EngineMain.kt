@@ -1,12 +1,12 @@
 package top.ntutn.kvjcef.engine
 
-import com.github.winterreisender.webviewko.WebviewKo
 import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import webview.jvm.console.WebViewConsole
 import kotlin.system.exitProcess
 
 private val scope = CoroutineScope(Dispatchers.Main)
@@ -33,12 +33,7 @@ fun main(vararg args: String) {
 private fun launchBrowserFrame(engine: NettyApplicationEngine) {
     scope.launch(Dispatchers.IO) {
         val port = engine.resolvedConnectors().first().port
-        WebviewKo().run {
-            size(1000, 618)
-            title("Title")
-            url("http://localhost:$port")
-            show()
-        }
+        WebViewConsole.launchAndWait("KVision Fullstack Demo", "http://localhost:$port")
     }
 }
 
